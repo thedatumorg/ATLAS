@@ -9,7 +9,7 @@ Several libraries in this repository include multiple method implementations
 | SVS | ScalableVectorSearch-0.0.2 |  |
 | GLASS-HNSW | pyglass |  |
 | GLASS-NSG | pyglass |  |
-| FLATNAV |  |  |
+| FLATNAV | flatnav |  |
 | FINGER | FINGER |  |
 | DISKANN | DiskANN |  |
 | NSSG | SSG |  |
