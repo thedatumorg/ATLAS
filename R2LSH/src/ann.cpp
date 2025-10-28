@@ -7,7 +7,8 @@ int ground_truth(					// output the ground truth results
 	int   d,							// dimension of space
 	char* data_set,						// address of data set
 	char* query_set,					// address of query set
-	char* truth_set)					// address of ground truth file
+	char* truth_set,					// address of query set
+	char* recall_set)					// address of ground truth file
 {
 	clock_t startTime = (clock_t) -1;  
 	clock_t endTime   = (clock_t) -1;
@@ -19,7 +20,7 @@ int ground_truth(					// output the ground truth results
 	float ind;
 
 	FILE* fp = fopen(truth_set, "w");		// open output file
-	FILE* fp0 = fopen("recall.txt", "w");
+	FILE* fp0 = fopen(recall_set, "w");
 	
 	if (!fp) {
 		printf("I can not create %s.\n", truth_set);
@@ -202,7 +203,7 @@ int indexing(						// build hash tables for the dataset
 	startTime = clock();
 	QALSH* lsh = new QALSH();
 	lsh->init(n, m, n_ring, d, sub_d, B, output_folder);          
-	lsh->bulkload(data_set);                                
+	lsh->bulkload(data_set, output_folder);                                
 	endTime = clock();
 
 	float indexing_time = ((float) endTime - startTime) / CLOCKS_PER_SEC;
@@ -227,6 +228,7 @@ int lshknn(							// k-nn via qalsh (data in disk)
 	char* query_set,					// path of query set
 	char* truth_set,					// groundtrue file
 	char* output_folder,				// output folder
+	char* recall_set,
 	int   m,
 	float ratio,
 	int   n_ring,
@@ -239,8 +241,14 @@ int lshknn(							// k-nn via qalsh (data in disk)
 	int ret = 0;
 	int maxk = MAXK;
 	int i, j;
+	string resultFile=output_folder;
+	resultFile = resultFile + "result.txt";
+	string centerFile=output_folder;
+	centerFile = centerFile + "center.txt";
+	string rootFile=output_folder;
+	rootFile = rootFile + "root.txt";
 	FILE* fp = NULL;				// file pointer
-	FILE* f1 =fopen("result.txt","a");
+	FILE* f1 =fopen(resultFile.c_str(),"w");
 	// -------------------------------------------------------------------------
 	//  Read query set
 	// -------------------------------------------------------------------------
@@ -272,7 +280,7 @@ int lshknn(							// k-nn via qalsh (data in disk)
 		return 1;
 	}
 
-	FILE* fp2 = fopen("recall.txt","r");
+	FILE* fp2 = fopen(recall_set,"r");
 	if (!fp2){printf("error\n"); return 1;}
 	
 	fscanf(fp, "%d %d\n", &qn, &maxk);
@@ -332,9 +340,8 @@ int lshknn(							// k-nn via qalsh (data in disk)
 		printf("Could not create the output file.\n");
 		return 1;
 	}
-
-	FILE* f_cen = fopen("center.txt", "r");
-	FILE* f_root = fopen("root.txt", "r");
+	FILE* f_cen = fopen(centerFile.c_str(), "r");
+	FILE* f_root = fopen(rootFile.c_str(), "r");
 	int ordinal;
 
 	int** Root_I = new int* [m];
@@ -400,7 +407,7 @@ int lshknn(							// k-nn via qalsh (data in disk)
 	//----------------------------------------------------------------
 
 	printf("QALSH for c-k-ANN Search: \n");
-	printf("    Top-k\tRatio\t\tI/O\t\tTime (ms)\n");
+	printf("    Top-k\tRecall\tRatio\t\tI/O\t\tTime (ms)\t\tExtra Time (ms)\t\tMAP (ms)\n");
 	
 	    ratio = c;
 	    
@@ -408,12 +415,16 @@ int lshknn(							// k-nn via qalsh (data in disk)
 		allRatio = 0.0f;
 		allIO = 0;
 		allrecall = 0;
+		float map=0.0f;
 		
 		startTime = clock();
+		float extraTime = 0.0f;
 		for (i = 0; i < qn; i++) {
 			thisIO = lsh->knn(query[i], top_k, ratio, rslt, output_folder, center, r_lo, r_up, r_lo_sqr, r_up_sqr, Root_I, last_p, low, upp, lam);      //
 			thisRatio = 0.0f;
 			thisrecall = 0;
+			clock_t startTimeExtra = clock();
+
 			for (j = 0; j < top_k; j++) {
 				thisRatio += rslt[j].dist_ / R[i * maxk + j];
 			}
@@ -423,6 +434,35 @@ int lshknn(							// k-nn via qalsh (data in disk)
 			       {thisrecall++; break;}
 			   } 
 			}
+
+			float ap = 0;
+			for (int r=1; r<=K; r++) {
+				bool isR_kExact = false;
+				for (int j=0; j<K; j++) {
+					if (rslt[r-1].id_ == recall[i * maxk + j]) {
+						isR_kExact = true;
+						break;
+					}
+				}
+				if (isR_kExact) {
+					int ct = 0;
+					for (int j=0; j<r; j++) {
+						for (int jj=0; jj<r; jj++) {
+							if (rslt[j].id_ == recall[i * maxk + jj]) {
+								ct++;
+								break;
+							}
+						}
+					}
+					ap += (double)ct/r;
+				}
+			}
+			map+= ap/K;
+
+
+			clock_t endTimeExtra = clock();
+
+			extraTime += ((float) endTimeExtra - startTimeExtra) / CLOCKS_PER_SEC;
 				
 			thisRatio /= top_k;
 			allRatio += thisRatio;
@@ -435,10 +475,12 @@ int lshknn(							// k-nn via qalsh (data in disk)
 		allRatio = allRatio / qn;
 		allTime = (allTime * 1000.0f) / qn;
 		allIO = (int) ceil((float) allIO / (float) qn);
-		re_out  = (float)allrecall / (float)qn;
+		re_out  = (float)allrecall / ((float)qn*top_k);
 
-		printf("    %3d\t\t%.4f\t\t%d\t\t%.2f\n", top_k, allRatio, 
-			allIO, allTime);
+		printf("    %3d\t\t%.4f\t\t%.4f\t\t%d\t\t%.2f\t\t%.2f\t\t%.2f\n", top_k, re_out,allRatio, 
+			allIO, allTime, extraTime, map/qn);
+		printf("    %3d\t\t%.4f\t\t%.4f\t\t%d\t\t%.2f\t\t%.2f\t\t%.2f\n", top_k, re_out,allRatio, 
+			allIO, (allTime*qn)/1000, extraTime, map/qn);
 		fprintf(fp, "%d\t%f\t%d\t%f\n", top_k, allRatio, allIO, allTime);
 		fprintf(f1, "%f,%d,%f,%f,%d,%f\n", ratio, top_k, allRatio, re_out, allIO, allTime);
 //	}

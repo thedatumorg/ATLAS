@@ -52,6 +52,39 @@ DATATYPE Metric::Cal_Recall(int targetKnn_,Real_Result & real_result_, vector<ve
 	return overRecall;
 }
 
+DATATYPE Metric::Cal_MAP(int targetKnn_,Real_Result & real_result_, vector<vector<pair<DATATYPE, int>>> query_res_)
+{
+	float map = 0;
+	for (int nq = 0; nq < query_res_.size(); ++nq)
+	{
+		float ap = 0;
+    	for (int r=1; r<=targetKnn_; r++) {
+			bool isR_kExact = false;
+			for (int j=0; j<targetKnn_; j++) {
+				if (query_res_[nq][r-1].second == real_result_[nq][j].second) {
+					isR_kExact = true;
+					break;
+				}
+			}
+			if (isR_kExact) {
+				int ct = 0;
+				for (int j=0; j<r; j++) {
+					for (int jj=0; jj<r; jj++) {
+						if (query_res_[nq][j].second == real_result_[nq][jj].second) {
+							ct++;
+							break;
+						}
+					}
+				}
+				ap += (double)ct/r;
+			}
+    	}
+		map+=ap/targetKnn_;
+	}
+	
+	return map/(float) query_res_.size();
+}
+
 
 vector<DATATYPE> Metric::calOverRatioAll(Real_Result& real_result_, vector <vector<pair<DATATYPE, int>>>& query_res_) 
 {

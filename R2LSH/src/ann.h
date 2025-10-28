@@ -8,7 +8,8 @@ int ground_truth(					// output ground truth (data in memory)
 	int   d,							// dimension of space
 	char* data_set,						// address of data set
 	char* query_set,					// address of query set
-	char* truth_set);					// address of ground truth file
+	char* truth_set,					// address of query set
+	char* recall_set);					// address of ground truth file
 
 // -----------------------------------------------------------------------------
 int indexing(						// build hash tables for the dataset
@@ -29,6 +30,7 @@ int lshknn(							// k-nn via qalsh (data in disk)
 	char* query_set,					// path of query set
 	char* truth_set,					// groundtrue file
 	char* output_folder,				// output folder
+	char* recall_set,				// output folder
 	int   m,
 	float ratio,
 //	int   n_ref,

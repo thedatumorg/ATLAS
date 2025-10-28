@@ -74,4 +74,34 @@ float calc_recall(                  // calc recall (percentage)
     return (i + 1) * 100.0f / k;
 }
 
+float calc_map(                  // calc recall (percentage)
+    int   K,                            // top-k value
+    const Result *truth,                // ground truth results 
+    MinK_List *list)                    // top-k approximate results
+{
+    float ap = 0;
+    for (int r=1; r<=K; r++) {
+        bool isR_kExact = false;
+        for (int j=0; j<K; j++) {
+            if (list->ith_id(r-1) == truth[j].id_-1) {
+                isR_kExact = true;
+                break;
+            }
+        }
+        if (isR_kExact) {
+            int ct = 0;
+            for (int j=0; j<r; j++) {
+                for (int jj=0; jj<r; jj++) {
+                    if (list->ith_id(j) == truth[jj].id_-1) {
+                        ct++;
+                        break;
+                    }
+                }
+            }
+            ap += (double)ct/r;
+        }
+    }
+    return ap/K;
+}
+
 } // end namespace nns

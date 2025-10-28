@@ -167,7 +167,8 @@ void QALSH::gen_hash_func()			// generate hash function <a_array>   //不变
 
 // -----------------------------------------------------------------------------
 int QALSH::bulkload(				// build m b-trees by bulkloading
-	char* data_set)						// data set
+	char* data_set,
+	char* output_folder)						// data set
 {
 	// -------------------------------------------------------------------------
 	//  Check whether the default maximum memory is enough
@@ -249,8 +250,14 @@ int QALSH::bulkload(				// build m b-trees by bulkloading
 	int ind;	
 	float* ref_p = new float[s_dim_];
     double* ref_p2 = new double[s_dim_];
-	FILE* fp1 = fopen("center.txt","w");
-	FILE* fp3 = fopen("root.txt","w");
+	string resultFile=output_folder;
+	resultFile = resultFile + "result.txt";
+	string centerFile=output_folder;
+	centerFile = centerFile + "center.txt";
+	string rootFile=output_folder;
+	rootFile = rootFile + "root.txt";
+	FILE* fp1 = fopen(centerFile.c_str(),"w");
+	FILE* fp3 = fopen(rootFile.c_str(),"w");
 	
 	int* Root_I = new int [n_ring_];
 	float jj;

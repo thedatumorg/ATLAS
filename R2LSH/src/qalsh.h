@@ -74,7 +74,8 @@ public:
 
 	// -------------------------------------------------------------------------
 	int bulkload(					// build b+ trees by bulkloading
-		char* data);					// data set
+		char* data,
+		char* output_folder);					// data set
 
 	// -------------------------------------------------------------------------
 	int knn(						// k-nn search

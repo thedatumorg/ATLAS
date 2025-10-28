@@ -55,6 +55,7 @@ int main(int nargs, char **args)
 	char  query_set[200];			// address of query set
 	char  truth_set[200];			// address of ground truth file
 	char  output_folder[200];		// output folder
+	char  recall_set[200];
 
 	bool failed = false;
 	int  cnt = 1;
@@ -169,6 +170,10 @@ int main(int nargs, char **args)
 			strncpy(truth_set, args[++cnt], sizeof(truth_set));
 			printf("truth set = %s\n", truth_set);
 		}
+		else if (strcmp(args[cnt], "-rs") == 0) {
+			strncpy(recall_set, args[++cnt], sizeof(recall_set));
+			printf("recall_set set = %s\n", recall_set);
+		}
 		else if (strcmp(args[cnt], "-of") == 0) {
 			strncpy(output_folder, args[++cnt], sizeof(output_folder));
 			printf("output folder = %s\n", output_folder);
@@ -192,13 +197,13 @@ int main(int nargs, char **args)
 
 	switch (alg) {
 	case 0:
-		ground_truth(n, qn, d, data_set, query_set, truth_set);
+		ground_truth(n, qn, d, data_set, query_set, truth_set, recall_set);
 		break;
 	case 1:
 		indexing(n, m, n_ring, d, sub_d, B,  data_set, output_folder);
 		break;
 	case 2:
-		lshknn(qn, d, query_set, truth_set, output_folder, m, ratio, n_ring, sub_d, lam, topK, ratio);
+		lshknn(qn, d, query_set, truth_set, output_folder, recall_set, m, ratio, n_ring, sub_d, lam, topK, ratio);
 		break;
 	case 3:
 		linear_scan(n, qn, d, B, query_set, truth_set, output_folder);

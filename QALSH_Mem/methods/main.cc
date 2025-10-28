@@ -116,6 +116,10 @@ void interface(                     // interface for calling function
 // -----------------------------------------------------------------------------
 int main(int nargs, char **args)
 {
+    freopen("all_logs.txt","a+",stdout);
+    if (strcmp(args[nargs-2], "-dname") == 0) {
+        freopen(args[nargs-1],"a+",stdout);
+    }
     srand(6);                       // use a fixed seed instead of time(NULL)
 
     int   cnt  = 1;                 // parameter counter
@@ -188,6 +192,9 @@ int main(int nargs, char **args)
             if (folder[len-1] != '/') { folder[len]='/'; folder[len+1]='\0'; }
             printf("folder = %s\n", folder);
             create_dir(folder);
+        }
+        else if (strcmp(args[cnt], "-dname") == 0) {
+            ++cnt;
         }
         else {
             printf("Parameters error!\n"); usage(); exit(1);

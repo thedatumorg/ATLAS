@@ -44,8 +44,8 @@ int main(int argc, char const* argv[])
 	Config::dataSetName = "audio";
 	Config::lowDim = 15;
 	Config::highDim = 192;
-	Config::KNN = 100;
-	Config::N = 54187;
+	Config::KNN = 20;
+	Config::N = 53387;
 	//pivot
 	Config::pivotNum = 5;
 	Config::pivotRandomCount = 5;
@@ -78,15 +78,21 @@ int main(int argc, char const* argv[])
 			Config::T = std::atof(argv[6]);
 			Config::search_Radius = std::atof(argv[7]);
 		}
+
+		if (argc > 8) {
+			Config::KNN = std::atoi(argv[8]);
+		}
+
+		Config::t = MyFunc::Ccal_thresh(Config::lowDim, Config::alpha1);
 	}
 	else {
 		std::cout << "Using the default configuration!\n\n";
 	}
 
 	#if defined(unix) || defined(__unix__)
-		Config::highDataFilePath = "./../dataset/" + Config::dataSetName + ".data_all";
-		Config::highQueryFilePath = "./../dataset/" + Config::dataSetName + ".data_all_query";
-		Config::knnResultFilePath = "./../dataset/ANN/" + Config::dataSetName + "_result_pmlsh.txt";
+		Config::highDataFilePath = "/dataset-path/" + Config::dataSetName + "/base.fvecs";
+		Config::highQueryFilePath = "/dataset-path/" + Config::dataSetName + "/query.fvecs";
+		Config::knnResultFilePath = "./../../dataset/ANN/" + Config::dataSetName + "_result_pmlsh.txt";
 	#else
 		Config::highDataFilePath = "E:\\Dataset_for_c\\" + Config::dataSetName + ".data_all";
 		Config::highQueryFilePath = "E:\\Dataset_for_c\\" + Config::dataSetName + ".data_all_query";
@@ -99,7 +105,7 @@ int main(int argc, char const* argv[])
 	std::cout << "c=        " << Config::c_appro << std::endl;
 	std::cout << "k=        " << Config::KNN << std::endl;
 	std::cout << "m=        " << Config::lowDim << std::endl;
-
+	load_data();
 	if (Config::N > 9000000) {
 		Config::MLeaf = 64;
 		Config::M_NUM = 64;
@@ -110,14 +116,16 @@ int main(int argc, char const* argv[])
 		Config::M_NUM = 128;
 	}
 
-	load_data();
+	
 	pmLsh myPmlsh;
 	myPmlsh.constructIndex(lowData);
 
 	lowQueryData.resize(100);
 	highQueryData.resize(100);
-	myPmlsh.improvedSearchWithKth(highData, highQueryData, lowQueryData, real_result);
+	myPmlsh.improvedSearchWithKth(highData, highQueryData, lowQueryData, real_result,Config.dataSetName);
 }
+
+
 
 void load_data()
 {

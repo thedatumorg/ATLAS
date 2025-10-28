@@ -49,12 +49,59 @@ float calc_ratio(                   // calc overall ratio [1,\infinity)
     MinK_List *list);                   // top-k approximate results
 
 // -----------------------------------------------------------------------------
+float calc_map(                  // calc map (percentage)
+    int   k,                            // top-k value
+    const Result *truth,                // ground truth results 
+    MinK_List *list);                   // results returned by algorithms
+
+// -----------------------------------------------------------------------------
 float calc_recall(                  // calc recall (percentage)
     int   k,                            // top-k value
     const Result *truth,                // ground truth results 
     MinK_List *list);                   // results returned by algorithms
 
 // -----------------------------------------------------------------------------
+
+template<class DType>
+void readFVecsFromExternal(char* filepath, DType *data, int N, int maxRow=-1) {
+  FILE *infile = fopen(filepath, "rb");
+  if (infile == NULL) {
+    std::cout << "File not found" << std::endl;
+    return;
+  }
+  
+  int rowCt = 0;
+  int dimen;
+  while (true) {
+    if (fread(&dimen, sizeof(int), 1, infile) == 0) {
+      break;
+    }
+    if (dimen != N) {
+      std::cout << "N and actual dimension mismatch" << std::endl;
+      return;
+    }
+    std::vector<DType> v(dimen);
+    if(fread(v.data(), sizeof(DType), dimen, infile) == 0) {
+      std::cout << "Error when reading" << std::endl;
+    };
+    
+    for (int i=0; i<dimen; i++) {
+      data[rowCt*dimen+i]= v[i];
+    }
+
+    rowCt++;
+    
+    if (maxRow != -1 && rowCt >= maxRow) {
+      break;
+    }
+  }
+  // std::cout<<"Row count test: "<<rowCt<<std::endl;
+
+  if (fclose(infile)) {
+    std::cout << "Could not close data file" << std::endl;
+  }
+}
+
 template<class DType>
 int read_data(                      // read data (binary) from disk
     int   n,                            // cardinality
@@ -66,18 +113,23 @@ int read_data(                      // read data (binary) from disk
 {
     char fname[200]; 
     switch (sign) {
-        case 0: sprintf(fname, "%s.ds", prefix); break;
-        case 1: sprintf(fname, "%s.q", prefix); break;
+        case 0: sprintf(fname, "%s/base.fvecs", prefix); break;
+        case 1: sprintf(fname, "%s/query.fvecs", prefix); break;
         case 2: sprintf(fname, "%s.gt%3.1f", prefix, p); break;
         default: printf("Parameters error!\n"); return 1;
     }
-    
-    FILE *fp = fopen(fname, "rb");
-    if (!fp) { printf("Could not open %s\n", fname); return 1; }
+    if (sign==2) {
+        FILE *fp = fopen(fname, "rb");
+        if (!fp) { printf("Could not open %s\n", fname); return 1; }
 
-    uint64_t size = (uint64_t) n*d;
-    fread(data, sizeof(DType), size, fp);
-    fclose(fp);
+        uint64_t size = (uint64_t) n*d;
+        fread(data, sizeof(DType), size, fp);
+        fclose(fp);
+    }
+    else {
+        readFVecsFromExternal<DType>(fname, data, d, n);
+    }
+    
     return 0;
 }
 

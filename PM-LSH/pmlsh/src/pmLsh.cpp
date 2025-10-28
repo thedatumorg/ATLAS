@@ -4,11 +4,11 @@
 #include <queue>
 
 
-void pmLsh::improvedSearchWithKth(DataMetric& highData, DataMetric& highQueryData, DataMetric& lowQueryData, Real_Result& real_result)
+void pmLsh::improvedSearchWithKth(DataMetric& highData, DataMetric& highQueryData, DataMetric& lowQueryData, Real_Result& real_result, string dataset_name)
 {
-	/*ËÑË÷*/
+	/*ï¿½ï¿½ï¿½ï¿½*/
 #if defined(unix) || defined(__unix__)
-	std::string file = "./experiment/result.csv", file_all = "./experiment/result_all.csv";
+	std::string file = "./../experiment/result.csv", file_all = "./../experiment/result_all.csv";
 #else
 	std::string file = "experiment/result.csv", file_all = "experiment/result_all.csv";
 #endif
@@ -57,6 +57,7 @@ void pmLsh::improvedSearchWithKth(DataMetric& highData, DataMetric& highQueryDat
 		averageRangeCount = averageRangeCount / lowQueryData.size();
 		query_time = time.elapsed();
 		all_recall = Metric::calRecallAll(real_result, queryResult);
+		float all_MAP = Metric::Cal_MAP(Config::KNN, real_result, queryResult);
 		all_overRatio = Metric::calOverRatioAll(real_result, queryResult);
 
 		cout << "\nFINISH QUERY!\n\n";
@@ -64,7 +65,9 @@ void pmLsh::improvedSearchWithKth(DataMetric& highData, DataMetric& highQueryDat
 		int id = Config::KNN / 10;
 
 		std::cout << "AVG QUERY TIME:    " << query_time / lowQueryData.size() * 1000 << "ms." << std::endl << std::endl;
+		std::cout << "TOTAL QUERY TIME:  " << query_time * 1000 << "ms." << std::endl << std::endl;
 		std::cout << "AVG RECALL:        " << all_recall[id] << std::endl;
+		std::cout << "AVG MAP:           " << all_MAP << std::endl;
 		std::cout << "AVG RATIO:         " << all_overRatio[id] << std::endl;
 		std::cout << "AVG COST:          " << all_cost / highData.size() / lowQueryData.size() << std::endl;
 		std::cout << "AVG ROUNDS:        " << averageRangeCount << std::endl;

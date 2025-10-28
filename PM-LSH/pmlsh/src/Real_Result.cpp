@@ -12,8 +12,7 @@ void Real_Result::cal_knn_result(const string& result_Folder_path, DataMetric& r
 		in.close();
 		return;
 	}
-	knn_ = 100;
-	int qn = 100;
+	int qn = query_data_.size();
 	cout << "COMPUTER BENCHMAKE...\n";
 	Timer timer;
 	vector<vector<pair<DATATYPE, int>>> sort_vec;
