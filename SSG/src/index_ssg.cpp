@@ -319,11 +319,11 @@ void IndexSSG::Link(const Parameters &parameters, SimpleNeighbor *cut_graph_) {
   float angle = parameters.Get<float>("A");
   float threshold = std::cos(angle / 180 * kPi);
 
-#pragma omp parallel
+// #pragma omp parallel
   {
     // unsigned cnt = 0;
     std::vector<Neighbor> pool, tmp;
-#pragma omp for schedule(dynamic, 100)
+// #pragma omp for schedule(dynamic, 100)
     for (unsigned n = 0; n < nd_; ++n) {
       pool.clear();
       tmp.clear();
@@ -338,7 +338,7 @@ void IndexSSG::Link(const Parameters &parameters, SimpleNeighbor *cut_graph_) {
       */
     }
 
-#pragma omp for schedule(dynamic, 100)
+// #pragma omp for schedule(dynamic, 100)
     for (unsigned n = 0; n < nd_; ++n) {
       InterInsert(n, range, threshold, locks, cut_graph_);
     }
@@ -649,7 +649,7 @@ void IndexSSG::strong_connect(const Parameters &parameter) {
   std::vector<std::pair<unsigned, unsigned>> edges_all;
   std::mutex edge_lock;
 
-#pragma omp parallel for
+// #pragma omp parallel for
   for (unsigned nt = 0; nt < n_try; nt++) {
     unsigned root = rand() % nd_;
     boost::dynamic_bitset<> flags{nd_, 0};
@@ -705,7 +705,7 @@ void IndexSSG::DFS_expand(const Parameters &parameter) {
     eps_.push_back(ids[i]);
     //std::cout << eps_[i] << '\n';
   }
-#pragma omp parallel for
+// #pragma omp parallel for
   for(unsigned i=0; i<n_try; i++){
     unsigned rootid = eps_[i];
     boost::dynamic_bitset<> flags{nd_, 0};

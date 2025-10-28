@@ -24,7 +24,7 @@ else()
 endif()
 
 # Python binding
-add_subdirectory(third_party/pybind11)
+# add_subdirectory(third_party/pybind11)
 
 # Source codes
 add_subdirectory(src)

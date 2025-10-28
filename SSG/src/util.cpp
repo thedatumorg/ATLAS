@@ -29,7 +29,7 @@ void GenRandom(std::mt19937& rng, unsigned* addr, unsigned size, unsigned N) {
 float* load_data(const char* filename, unsigned& num, unsigned& dim) {
   std::ifstream in(filename, std::ios::binary);
   if (!in.is_open()) {
-    std::cerr << "Open file error" << std::endl;
+    std::cerr << "Open file error " << filename<<std::endl;
     exit(-1);
   }
 

@@ -64,8 +64,10 @@ How to use
 
 ```bash
 $ cd /path/to/project
+$ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 $ mkdir -p build && cd build
-$ cmake .. && make -j
+$ conan install . --output-folder=build --build=missing
+$ make -j
 ```
 
 ### Building SSG Index
