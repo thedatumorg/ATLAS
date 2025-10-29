@@ -77,9 +77,9 @@ int main(int argc, char* argv[]) {
     int search_L = std::stoi(argv[6]);     // search parameter
     int build_L = std::stoi(argv[7]);      // build parameter
 
-    std::string d_path="/data/kabir/similarity-search/dataset/[dataset]/base.fvecs";
-    std::string q_path="/data/kabir/similarity-search/dataset/[dataset]/query.fvecs";
-    std::string g_path="/data/kabir/similarity-search/dataset/[dataset]/groundtruth.ivecs";
+    std::string d_path="/dataset-path/[dataset]/base.fvecs";
+    std::string q_path="/dataset-path/[dataset]/query.fvecs";
+    std::string g_path="/dataset-path/[dataset]/groundtruth.ivecs";
     replace_all(d_path,"[dataset]",dataset_name);
     replace_all(q_path,"[dataset]",dataset_name);
     replace_all(g_path,"[dataset]",dataset_name);
