@@ -24,3 +24,15 @@ target_link_libraries(demo_weighted_kmeans PRIVATE faiss)
 
 add_executable(demo_residual_quantizer EXCLUDE_FROM_ALL demo_residual_quantizer.cpp)
 target_link_libraries(demo_residual_quantizer PRIVATE faiss)
+
+add_executable(demo_pq_opq_imi EXCLUDE_FROM_ALL demo_pq_opq_imi.cpp)
+target_link_libraries(demo_pq_opq_imi PRIVATE faiss)
+
+add_executable(demo_ivfpq EXCLUDE_FROM_ALL demo_ivfpq.cpp)
+target_link_libraries(demo_ivfpq PRIVATE faiss)
+
+add_executable(demo_hnsw EXCLUDE_FROM_ALL demo_hnsw.cpp)
+target_link_libraries(demo_hnsw PRIVATE faiss))
+
+add_executable(demo_nsg EXCLUDE_FROM_ALL demo_nsg.cpp)
+target_link_libraries(demo_nsg PRIVATE faiss)
