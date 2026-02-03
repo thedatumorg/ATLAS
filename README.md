@@ -1,5 +1,13 @@
-# ANNS-benchmark
-### Algorithms
+<h1 align="center">ATLAS</h1>
+<h2 align="center">ATLAS: The Landscape of Approximate Similarity Search — Two Decades of Algorithmic Advances</h2>
+
+
+<h3 id="dataset">🗄️ Dataset</h3>
+Due to limitations in the upload size on GitHub, we host the datasets at a different location. Please download the datasets using the following links
+
+* https://drive.google.com/drive/folders/1olm5AcZ1h7hBEuWEk3UwOWkxs6IXoewB?usp=sharing
+
+<h3 id="algorithms">🗄️ Algorithms</h3>
 
 | Method | Folder
 |:------|:-------------|
