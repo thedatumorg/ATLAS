@@ -7,7 +7,11 @@ Due to limitations in the upload size on GitHub, we host the datasets at a diffe
 
 * https://drive.google.com/drive/folders/1olm5AcZ1h7hBEuWEk3UwOWkxs6IXoewB?usp=sharing
 
+<<<<<<< HEAD
 <h3 id="algorithms"><img src="images.png" height="24"/> Algorithms</h3>
+=======
+<h3 id="algorithms">⚙️ Algorithms</h3>
+>>>>>>> 559763d924de1a76c5f44513ecb4ed74b844662c
 
 | Method | Folder
 |:------|:-------------|
@@ -56,3 +60,9 @@ Due to limitations in the upload size on GitHub, we host the datasets at a diffe
 | [IVFPQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
 | [IMI-OPQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
 | [IMI-PQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
+
+### ✉️ Contact
+
+If you have any questions or suggestions, feel free to contact:
+* Ahmed Samin Yeaser Kabir (kabir.36@osu.edu)
+* John Paparrizos (paparrizos.1@osu.edu)
