@@ -59,6 +59,7 @@ Due to limitations in the upload size on GitHub, we host the datasets at a diffe
 | [IVFPQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
 | [IMI-OPQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
 | [IMI-PQ](https://github.com/facebookresearch/faiss) | faiss-1.7.3 |
+| [RaBitQ](https://github.com/VectorDB-NTU/RaBitQ-Library) | RaBitQ-Library |
 
 ### ✉️ Contact
 
