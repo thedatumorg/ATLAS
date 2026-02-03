@@ -7,7 +7,7 @@ Due to limitations in the upload size on GitHub, we host the datasets at a diffe
 
 * https://drive.google.com/drive/folders/1olm5AcZ1h7hBEuWEk3UwOWkxs6IXoewB?usp=sharing
 
-<h3 id="algorithms"><img src="images.png" height="24"/> Algorithms</h3>
+<h3 id="algorithms">⚙️ Algorithms</h3>
 
 | Method | Folder
 |:------|:-------------|
