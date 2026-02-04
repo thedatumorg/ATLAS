@@ -1,0 +1,7 @@
+number_of_subspace, number_of_bits_per_subspace
+16,4
+8,8
+32,4
+16,8
+64,4
+32,8

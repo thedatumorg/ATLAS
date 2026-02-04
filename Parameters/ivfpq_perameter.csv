@@ -1,0 +1,19 @@
+number_of_subspace, number_of_bits_per_subspace,nlist
+16,4,sqrt(n)
+8,8,sqrt(n)
+32,4,sqrt(n)
+16,8,sqrt(n)
+64,4,sqrt(n)
+32,8,sqrt(n)
+16,4,sqrt(n)*.25
+8,8,sqrt(n)*.25
+32,4,sqrt(n)*.25
+16,8,sqrt(n)*.25
+64,4,sqrt(n)*.25
+32,8,sqrt(n)*.25
+16,4,sqrt(n)*.05
+8,8,sqrt(n)*.05
+32,4,sqrt(n)*.05
+16,8,sqrt(n)*.05
+64,4,sqrt(n)*.05
+32,8,sqrt(n)*.05
